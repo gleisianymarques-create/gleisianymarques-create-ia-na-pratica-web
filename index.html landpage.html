@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IA na Prática — Da ideia à solução</title>
+<meta name="description" content="IA na Prática: inteligência artificial aplicada à prática. Projeto em desenvolvimento.">
+<meta name="theme-color" content="#070d24">
+<meta property="og:title" content="IA na Prática">
+<meta property="og:description" content="Da ideia à solução. Inteligência artificial aplicada à prática.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070d24; --bg2:#0b1533; --panel:rgba(20,34,80,.45);
+  --blue:#1f8bff; --violet:#8b5cf6; --white:#f4f7ff; --muted:#a3b3d9; --line:rgba(120,150,255,.2);
+  --grad:linear-gradient(120deg,#1f8bff,#8b5cf6);
+  --display:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--white);font-family:var(--body);font-size:17px;line-height:1.65;overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}
+
+/* Hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:calc(env(safe-area-inset-top,0px) + 32px) 24px 80px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 0%,#14225a 0%,var(--bg) 62%)}
+#field{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y}
+.glow{position:absolute;width:520px;height:520px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(139,92,246,.28),rgba(31,139,255,.12) 45%,transparent 70%);
+  left:50%;top:40%;transform:translate(-50%,-50%);transition:left .35s ease-out,top .35s ease-out}
+.hero-inner{position:relative;max-width:760px;pointer-events:none}
+.hero-inner a,.hero-inner button{pointer-events:auto}
+.status{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;
+  background:var(--panel);backdrop-filter:blur(8px);font-size:.88rem;color:var(--muted);margin-bottom:28px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 0 rgba(31,139,255,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(31,139,255,0)}100%{box-shadow:0 0 0 0 rgba(31,139,255,0)}}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(3rem,13vw,6.4rem);line-height:1;letter-spacing:-.035em;
+  background:linear-gradient(100deg,#fff 20%,#9cc8ff 55%,#b79bff);-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:rise 1.1s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(24px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.tagline{font-family:var(--display);font-weight:600;font-size:clamp(1.15rem,4.4vw,1.6rem);line-height:1.35;margin:26px auto 0;max-width:620px;
+  animation:rise 1.1s .25s cubic-bezier(.2,.7,.2,1) both}
+.lead{color:var(--muted);margin:18px auto 0;max-width:540px;animation:rise 1.1s .45s cubic-bezier(.2,.7,.2,1) both}
+.actions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:38px;animation:rise 1.1s .65s cubic-bezier(.2,.7,.2,1) both}
+
+.btn{font:600 1rem var(--display);display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;
+  border-radius:14px;border:1px solid transparent;cursor:pointer;text-decoration:none;position:relative;overflow:hidden;
+  transition:transform .25s,box-shadow .25s,background .25s}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 30px -8px rgba(80,120,255,.7)}
+.btn-primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+  transform:translateX(-120%);transition:transform .7s}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 38px -8px rgba(110,110,255,.85)}
+.btn-ghost{background:var(--panel);border-color:var(--line);color:var(--white);backdrop-filter:blur(8px)}
+.btn-ghost:hover{transform:translateY(-2px);border-color:var(--blue);box-shadow:0 0 28px -6px rgba(31,139,255,.6)}
+.btn:active{transform:scale(.98)}
+.hint{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);left:50%;transform:translateX(-50%);
+  font-size:.82rem;color:var(--muted);opacity:.8;pointer-events:none;white-space:nowrap}
+
+/* Sections */
+section.block{position:relative;padding:96px 24px;max-width:960px;margin:0 auto}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,6vw,2.6rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:20px;max-width:640px}
+.block p{color:var(--muted);max-width:620px}
+.block p + p{margin-top:14px}
+.rule{height:1px;border:0;background:linear-gradient(90deg,transparent,var(--line),transparent);max-width:960px;margin:0 auto}
+#projeto.flash h2{animation:flash 1.4s}
+@keyframes flash{30%{text-shadow:0 0 28px rgba(31,139,255,.9)}}
+
+/* Journey */
+.journey{display:grid;gap:14px;margin-top:40px;grid-template-columns:1fr}
+.step{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:var(--panel);backdrop-filter:blur(8px);position:relative}
+.step h3{font-family:var(--display);font-size:1.1rem;margin-bottom:6px}
+.step p{font-size:.95rem}
+.step.now{border-color:rgba(31,139,255,.7);background:linear-gradient(160deg,rgba(31,139,255,.18),rgba(139,92,246,.14));
+  box-shadow:0 0 40px -12px rgba(80,120,255,.7)}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;color:#cfe2ff;margin-bottom:10px}
+.step:not(.now) .badge{color:var(--muted)}
+.vision{margin-top:44px;padding:30px 26px;border-radius:22px;border:1px solid var(--line);
+  background:radial-gradient(ellipse at 0% 0%,rgba(139,92,246,.25),transparent 60%),var(--panel)}
+.vision h3{font-family:var(--display);font-size:1.3rem;margin-bottom:10px}
+
+/* CTA + final */
+.cta{text-align:center;padding:110px 24px 70px;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;left:50%;top:0;width:620px;height:620px;transform:translate(-50%,-30%);border-radius:50%;
+  background:radial-gradient(circle,rgba(31,139,255,.22),rgba(139,92,246,.14) 45%,transparent 70%);pointer-events:none}
+.cta h2,.cta p{margin-left:auto;margin-right:auto;position:relative}
+.cta .actions{position:relative}
+.final{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,6.2vw,3rem);line-height:1.2;letter-spacing:-.02em;max-width:760px;margin:0 auto 14px}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:30px 24px calc(env(safe-area-inset-bottom,0px) + 40px);border-top:1px solid var(--line)}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(min-width:760px){
+  .journey{grid-template-columns:repeat(3,1fr)}
+  body{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="inicio">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="glow" id="glow"></div>
+  <div class="hero-inner">
+    <div class="status"><span class="dot"></span>Projeto em desenvolvimento</div>
+    <h1>IA na Prática</h1>
+    <p class="tagline">Da ideia à solução. Inteligência artificial aplicada à prática.</p>
+    <p class="lead">Toque na tela e veja as ideias se conectarem.</p>
+    <div class="actions">
+      <button class="btn btn-primary" id="conheca" type="button">Conheça o projeto</button>
+      <a class="btn btn-ghost" href="https://ais-dev-ua3ywb3mw52ozg6apxz74s-65766976910.us-east5.run.app/" target="_blank" rel="noopener noreferrer">Acessar a aplicação</a>
+    </div>
+  </div>
+  <div class="hint">Role para continuar</div>
+</header>
+
+<main>
+<section class="block reveal" id="projeto">
+  <h2>Ideias só mudam alguma coisa quando saem do papel.</h2>
+  <p>O IA na Prática nasceu para aproximar a inteligência artificial do dia a dia: transformar uma ideia em algo que dá para usar, testar e melhorar.</p>
+  <p>É uma proposta de apresentação simples e direta, pensada para quem quer entender como a IA pode ser aplicada de verdade, sem complicação.</p>
+</section>
+
+<hr class="rule">
+
+<section class="block reveal" id="andamento">
+  <h2>Um projeto em construção.</h2>
+  <p>O IA na Prática está em desenvolvimento e continua evoluindo. Esta página é uma apresentação independente do projeto.</p>
+
+  <div class="journey">
+    <div class="step">
+      <span class="badge">Concluído</span>
+      <h3>Ideia</h3>
+      <p>O propósito foi definido: colocar a IA em prática.</p>
+    </div>
+    <div class="step now">
+      <span class="badge"><span class="dot"></span>Agora</span>
+      <h3>Construção</h3>
+      <p>A aplicação está sendo desenvolvida e aprimorada.</p>
+    </div>
+    <div class="step">
+      <span class="badge">Em breve</span>
+      <h3>Evolução</h3>
+      <p>Novos passos serão compartilhados com quem acompanha.</p>
+    </div>
+  </div>
+
+  <div class="vision">
+    <h3>Pensado como produto digital</h3>
+    <p>O projeto é idealizado como um produto digital que, no futuro, poderá ser comercializado.</p>
+  </div>
+</section>
+</main>
+
+<section class="cta reveal" id="aplicacao">
+  <h2>Veja a aplicação original.</h2>
+  <p>Acesse o projeto em seu endereço original e conheça o que já está de pé.</p>
+  <div class="actions">
+    <a class="btn btn-primary" href="https://ais-dev-ua3ywb3mw52ozg6apxz74s-65766976910.us-east5.run.app/" target="_blank" rel="noopener noreferrer">Acessar a aplicação</a>
+  </div>
+</section>
+
+<section class="cta reveal" style="padding-top:30px">
+  <p class="final">A inovação começa quando colocamos as ideias em prática.</p>
+</section>
+
+<footer>IA na Prática · Projeto em desenvolvimento · Idealizado por Gleisiany</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cv = document.getElementById('field'), ctx = cv.getContext('2d');
+  var glow = document.getElementById('glow');
+  var W, H, dpr, pts = [], ptr = {x:null,y:null}, running = true;
+  var COLORS = ['31,139,255','139,92,246','244,247,255'];
+
+  function size(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = cv.getBoundingClientRect();
+    W = r.width; H = r.height;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var n = Math.round(Math.min(90, Math.max(34, W*H/14000)));
+    while(pts.length < n) pts.push(make());
+    pts.length = n;
+  }
+  function make(x,y){
+    var a = Math.random()*6.283, s = .15 + Math.random()*.35;
+    return {x:x==null?Math.random()*W:x, y:y==null?Math.random()*H:y, vx:Math.cos(a)*s, vy:Math.sin(a)*s,
+            r:1.2+Math.random()*1.8, c:COLORS[(Math.random()*3)|0]};
+  }
+  function frame(){
+    if(!running){return}
+    ctx.clearRect(0,0,W,H);
+    var D = Math.min(140, W*.32);
+    for(var i=0;i<pts.length;i++){
+      var p = pts[i];
+      if(ptr.x!==null){
+        var dx = ptr.x-p.x, dy = ptr.y-p.y, d = Math.hypot(dx,dy);
+        if(d<190 && d>1){ p.vx += dx/d*.012; p.vy += dy/d*.012; }
+      }
+      p.vx *= .995; p.vy *= .995;
+      var sp = Math.hypot(p.vx,p.vy);
+      if(sp<.12){ p.vx *= 1.02; p.vy *= 1.02; }
+      if(sp>1.4){ p.vx *= .96; p.vy *= .96; }
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<-10)p.x=W+10; if(p.x>W+10)p.x=-10;
+      if(p.y<-10)p.y=H+10; if(p.y>H+10)p.y=-10;
+    }
+    for(var a=0;a<pts.length;a++){
+      for(var b=a+1;b<pts.length;b++){
+        var q = pts[a], z = pts[b], d2 = Math.hypot(q.x-z.x,q.y-z.y);
+        if(d2<D){
+          ctx.strokeStyle = 'rgba('+q.c+','+(1-d2/D)*.45+')';
+          ctx.lineWidth = .8;
+          ctx.beginPath(); ctx.moveTo(q.x,q.y); ctx.lineTo(z.x,z.y); ctx.stroke();
+        }
+      }
+    }
+    for(var k=0;k<pts.length;k++){
+      var s = pts[k];
+      ctx.shadowColor = 'rgba('+s.c+',.9)'; ctx.shadowBlur = 10;
+      ctx.fillStyle = 'rgba('+s.c+',.95)';
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.283); ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    requestAnimationFrame(frame);
+  }
+  function move(e){
+    var r = cv.getBoundingClientRect();
+    var t = e.touches ? e.touches[0] : e;
+    ptr.x = t.clientX - r.left; ptr.y = t.clientY - r.top;
+    glow.style.left = ptr.x + 'px'; glow.style.top = ptr.y + 'px';
+  }
+  function burst(x,y,n){
+    for(var i=0;i<n;i++){
+      var p = make(x,y); var a = Math.random()*6.283, s = 1+Math.random()*1.6;
+      p.vx = Math.cos(a)*s; p.vy = Math.sin(a)*s; pts.push(p);
+    }
+    if(pts.length>130) pts.splice(0, pts.length-130);
+  }
+  size();
+  window.addEventListener('resize', size);
+  cv.addEventListener('mousemove', move);
+  cv.addEventListener('touchmove', move, {passive:true});
+  cv.addEventListener('touchstart', function(e){ move(e); burst(ptr.x,ptr.y,6); }, {passive:true});
+  cv.addEventListener('click', function(e){ move(e); burst(ptr.x,ptr.y,6); });
+  cv.addEventListener('mouseleave', function(){ ptr.x = ptr.y = null; });
+  document.addEventListener('visibilitychange', function(){
+    running = !document.hidden; if(running) requestAnimationFrame(frame);
+  });
+  if(reduce){ frame(); running=false; } else { requestAnimationFrame(frame); }
+
+  // Botão "Conheça o projeto"
+  var sec = document.getElementById('projeto');
+  document.getElementById('conheca').addEventListener('click', function(){
+    var r = cv.getBoundingClientRect();
+    burst(W/2, H/2, 18);
+    sec.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'start'});
+    sec.classList.remove('flash'); void sec.offsetWidth; sec.classList.add('flash');
+  });
+
+  // Aparecer ao rolar
+  var items = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduce){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.15});
+    items.forEach(function(el){ io.observe(el); });
+  } else { items.forEach(function(el){ el.classList.add('in'); }); }
+})();
+</script>
+</body>
+</html>
